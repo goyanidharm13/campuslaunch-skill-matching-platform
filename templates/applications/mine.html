@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}My applications{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">My applications</h1>
+{% for a in applications %}
+<div class="panel mb-3">
+  <div class="d-flex justify-content-between flex-wrap gap-2">
+    <div><a class="fw-bold" href="{% url 'opportunities:detail' a.opportunity.pk %}">{{ a.opportunity.title }}</a><div class="meta">{{ a.opportunity.organization.name }} - applied {{ a.applied_at|date:"j M Y" }}</div></div>
+    <span class="status st-{{ a.status|slugify }} align-self-start">{{ a.status }}</span>
+  </div>
+</div>
+{% empty %}<div class="panel empty">You haven't applied to anything yet. <a href="{% url 'opportunities:list' %}">Find an opportunity</a></div>{% endfor %}
+{% endblock %}

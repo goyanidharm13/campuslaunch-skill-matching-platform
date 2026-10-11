@@ -1,0 +1,30 @@
+/* CampusLaunch admin theme: matches the main site */
+:root, html[data-theme="light"]{
+  --primary:#4338ca; --secondary:#5b5bf0; --accent:#8b5cf6;
+  --primary-fg:#fff;
+  --body-bg:#f4f5fb; --body-fg:#0b1020; --body-quiet-color:#5b6478;
+  --header-bg:#0b1020; --header-color:#c3c9ff; --header-branding-color:#fff; --header-link-color:#fff;
+  --breadcrumbs-bg:#1c2140; --breadcrumbs-fg:#c3c9ff; --breadcrumbs-link-fg:#fff;
+  --link-fg:#4338ca; --link-hover-color:#5b5bf0; --link-selected-fg:#4338ca;
+  --button-bg:#5b5bf0; --button-hover-bg:#4338ca; --default-button-bg:#4338ca; --default-button-hover-bg:#312e81;
+  --object-tools-bg:#5b5bf0; --object-tools-hover-bg:#4338ca;
+  --selected-row:#eceeff; --hairline-color:#e5e8f3; --border-color:#e5e8f3; --darkened-bg:#f7f8ff;
+  --message-success-bg:#e8f8f1; --message-warning-bg:#fff6e0; --message-error-bg:#fdecec;
+}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+#header{background:linear-gradient(135deg,#0b1020,#1c2140);box-shadow:0 8px 24px rgba(11,16,32,.25)}
+#site-name a{font-weight:800;letter-spacing:-.03em}
+.module{border:1px solid var(--hairline-color);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(11,16,32,.05),0 6px 18px rgba(11,16,32,.05);background:#fff}
+.module h2,.module caption,.inline-group h2{background:linear-gradient(135deg,#5b5bf0,#8b5cf6);color:#fff;font-weight:700}
+.module h2 a, .module caption a{color:#fff}
+#changelist table thead th{background:#fafbff;text-transform:uppercase;font-size:.72rem;letter-spacing:.08em}
+tr:hover td, tr:hover th{background:#f6f7ff}
+.button,input[type=submit],input[type=button],.submit-row input,a.button{border-radius:10px;font-weight:600;border:0}
+.submit-row input.default{background:linear-gradient(135deg,#5b5bf0,#8b5cf6);box-shadow:0 6px 16px rgba(91,91,240,.35)}
+.submit-row a.deletelink{border-radius:10px;font-weight:600}
+.object-tools a{border-radius:999px;font-weight:600}
+input[type=text],input[type=password],input[type=email],input[type=number],input[type=url],input[type=date],textarea,select{
+  border:1.5px solid #dcdff0;border-radius:10px;padding:7px 10px;transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{border-color:#5b5bf0;box-shadow:0 0 0 4px rgba(91,91,240,.16);outline:0}
+ul.messagelist li{border-radius:12px;font-weight:600}
+.login #container{border-radius:18px;overflow:hidden;box-shadow:0 24px 60px rgba(11,16,32,.2)}

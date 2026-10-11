@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ s }}{% endblock %}
+{% block content %}
+<a href="{% url 'recruiter:applicants' app.opportunity_id %}">Back to applicants</a>
+<div class="panel mt-2">
+  <h1 class="h4">{{ s.full_name }} <span class="status st-{{ app.status|slugify }}">{{ app.status }}</span></h1>
+  <p class="meta">{{ s.career_goal }} - {{ s.location }} - {{ s.user.email }}</p>
+  <p>{{ s.bio }}</p>
+  {% if s.github_url %}<a href="{{ s.github_url }}" rel="noopener">GitHub</a> {% endif %}{% if s.resume %}<a href="{{ s.resume.url }}">Resume</a>{% endif %}
+  {% if app.cover_letter %}<h2 class="h6 mt-3">Cover note</h2><p style="white-space:pre-line">{{ app.cover_letter }}</p>{% endif %}
+  <h2 class="h6 mt-3">Skills</h2>{% for k in skills %}<span class="skill-pill">{{ k.skill.name }} <b>{{ k.level }}</b></span>{% endfor %}
+  <h2 class="h6 mt-3">Education</h2>{% for e in educations %}<div>{{ e }} <span class="meta">{{ e.grade }}</span></div>{% empty %}<div class="meta">None</div>{% endfor %}
+  <h2 class="h6 mt-3">Projects</h2>{% for p in projects %}<div><b>{{ p.title }}</b> <span class="meta">{{ p.technologies }}</span></div>{% empty %}<div class="meta">None</div>{% endfor %}
+  <h2 class="h6 mt-3">Certifications</h2>{% for c in certifications %}<div>{{ c.name }}, {{ c.issuer }}</div>{% empty %}<div class="meta">None</div>{% endfor %}
+</div>
+{% endblock %}

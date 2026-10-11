@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-5">
+  <div class="panel auth-card">
+    <h1 class="h3 mb-3">Log in</h1>
+    <form method="post" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors.0 }}</div>{% endif %}
+      <div class="mb-3"><label class="form-label" for="{{ form.username.id_for_label }}">Username</label><input class="form-control" type="text" name="username" id="{{ form.username.id_for_label }}" autofocus required></div>
+      <div class="mb-3"><label class="form-label" for="{{ form.password.id_for_label }}">Password</label><input class="form-control" type="password" name="password" id="{{ form.password.id_for_label }}" required></div>
+      <div class="text-end mb-3" style="margin-top:-.5rem"><a class="small" href="{% url 'accounts:password_reset' %}">Forgot password?</a></div>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="btn btn-launch w-100">Log in</button>
+    </form>
+    <p class="meta mt-3 mb-0">New here? <a href="{% url 'accounts:register' %}">Create an account</a></p>
+  </div>
+</div></div>
+{% endblock %}

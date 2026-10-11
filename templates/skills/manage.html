@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}My skills{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4"><div class="panel">
+    <h1 class="h5">Add or update a skill</h1>
+    <form method="post" novalidate>{% csrf_token %}
+      {% for f in form %}<div class="mb-3"><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}{% for e in f.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}</div>{% endfor %}
+      <button class="btn btn-launch w-100">Save skill</button>
+    </form>
+    <p class="meta mt-3 mb-0">Can't find a skill? Ask an admin to add it to the catalog.</p>
+  </div></div>
+  <div class="col-lg-8"><div class="panel">
+    <h2 class="h5">Your skills ({{ my_skills|length }})</h2>
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Skill</th><th>Level</th><th>Years</th><th></th></tr></thead>
+      {% for s in my_skills %}<tr><td>{{ s.skill.name }}</td><td>{{ s.level }}</td><td>{{ s.years }}</td>
+        <td class="text-end"><form method="post" action="{% url 'skills:remove' s.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Remove</button></form></td></tr>
+      {% empty %}<tr><td colspan="4" class="empty">No skills yet. Add your first skill to see match scores.</td></tr>{% endfor %}
+    </table>
+  </div></div>
+</div>
+{% endblock %}
+{% block scripts %}<script>document.querySelectorAll("main select").forEach(function(e){e.classList.add("form-select")});document.querySelectorAll("main input[type=number]").forEach(function(e){e.classList.add("form-control")})</script>{% endblock %}

@@ -1,0 +1,15 @@
+<article class="opp-card">
+  <div class="d-flex justify-content-between align-items-start">
+    <span class="type-tag">{{ opp.get_opportunity_type_display }}</span>
+    {% if opp.days_left is not None and opp.days_left <= 7 %}<span class="meta text-danger fw-semibold">{{ opp.days_left }} day{{ opp.days_left|pluralize }} left</span>{% endif %}
+  </div>
+  <h3><a href="{% url 'opportunities:detail' opp.pk %}">{{ opp.title }}</a></h3>
+  <p class="meta mb-2">{{ opp.organization.name }}{% if opp.location %} - {{ opp.location }}{% endif %}{% if opp.is_remote %} (remote ok){% endif %}</p>
+  <div class="mb-3">{% for r in opp.opportunityskill_set.all|slice:":5" %}<span class="skill-pill">{{ r.skill.name }}</span>{% endfor %}</div>
+  <div class="mt-auto">
+    {% if match != "" and match is not None %}
+      <div class="match"><div class="match-bar {% if match < 50 %}low{% elif match < 75 %}mid{% endif %}"><i style="width:{{ match }}%"></i></div><span class="match-num">{{ match }}%</span></div>
+    {% endif %}
+    {% if opp.compensation %}<div class="meta mt-2">{{ opp.compensation }}</div>{% endif %}
+  </div>
+</article>

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ opp.title }}{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="panel">
+      <span class="type-tag">{{ opp.get_opportunity_type_display }}</span>
+      <h1 class="h3 mt-2">{{ opp.title }}</h1>
+      <p class="meta">{{ opp.organization.name }}{% if opp.location %} - {{ opp.location }}{% endif %}{% if opp.is_remote %} - Remote ok{% endif %}{% if opp.compensation %} - {{ opp.compensation }}{% endif %}</p>
+      <p class="meta">{% if opp.deadline %}Apply by {{ opp.deadline|date:"j M Y" }}{% if opp.is_expired %} (closed){% endif %}{% else %}No deadline{% endif %}</p>
+      <div style="white-space:pre-line">{{ opp.description }}</div>
+      <h2 class="h6 mt-4">Required skills</h2>
+      {% for r in requirements %}<span class="skill-pill">{{ r.skill.name }} <b>w{{ r.weight }}</b></span>{% endfor %}
+    </div>
+  </div>
+  <div class="col-lg-4">
+    {% if student %}
+      <div class="panel mb-3">
+        <div class="match-big">{{ analysis.percent }}%</div>
+        <div class="meta mb-2">match - {{ analysis.matched_weight }} / {{ analysis.total_weight }} weight</div>
+        <div class="match-bar {% if analysis.percent < 50 %}low{% elif analysis.percent < 75 %}mid{% endif %} mb-3"><i style="width:{{ analysis.percent }}%"></i></div>
+        {% for r in analysis.matched %}<span class="skill-pill have">{{ r.skill.name }}</span>{% endfor %}
+        {% for r in analysis.missing %}<span class="skill-pill miss">{{ r.skill.name }}</span>{% endfor %}
+        <p class="mt-2 mb-0 small"><b>Skill gap:</b> {{ analysis.action }}</p>
+      </div>
+      <div class="panel">
+        {% if applied %}
+          <p class="mb-1">Your application: <span class="status st-{{ applied.status|slugify }}">{{ applied.status }}</span></p>
+          <p class="meta mb-0">Applied {{ applied.applied_at|date:"j M Y" }}</p>
+        {% elif opp.is_open %}
+          <form method="post" action="{% url 'applications:apply' opp.pk %}">{% csrf_token %}
+            <label class="form-label" for="cl">Cover note (optional)</label>
+            <textarea id="cl" name="cover_letter" class="form-control mb-3" rows="3" maxlength="2000"></textarea>
+            <button class="btn btn-launch w-100">Apply now</button>
+          </form>
+        {% else %}<p class="mb-0">Applications are closed.</p>{% endif %}
+        <button type="button" class="btn btn-outline-secondary w-100 mt-2 save-btn" data-save-url="{% url 'opportunities:toggle_save' opp.pk %}" aria-pressed="{% if is_saved %}true{% else %}false{% endif %}">{% if is_saved %}Saved{% else %}Save{% endif %}</button>
+      </div>
+    {% elif not user.is_authenticated %}
+      <div class="panel"><p>Log in as a student to see your match and apply.</p><a class="btn btn-launch w-100" href="{% url 'accounts:login' %}?next={{ request.path }}">Log in</a></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

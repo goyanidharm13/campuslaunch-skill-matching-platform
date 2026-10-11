@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}My dashboard{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+  <h1 class="h3 mb-0">Hi, {{ profile.full_name }}</h1>
+  <a class="btn btn-outline-secondary" href="{% url 'students:profile' %}">Profile {{ profile.completeness }}% complete</a>
+</div>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <h2 class="h5">Recommended for you</h2>
+    {% if recs %}<div class="row g-3">{% for r in recs %}<div class="col-md-6">{% include "opportunities/_card.html" with opp=r.opportunity match=r.match %}</div>{% endfor %}</div>
+    {% else %}<div class="panel empty">Add skills to get recommendations. <a href="{% url 'skills:manage' %}">Add skills</a></div>{% endif %}
+  </div>
+  <div class="col-lg-4">
+    <h2 class="h5">Recent applications</h2>
+    <div class="panel">
+      {% for a in recent_apps %}
+        <div class="d-flex justify-content-between py-2 {% if not forloop.last %}border-bottom{% endif %}"><a href="{% url 'opportunities:detail' a.opportunity.pk %}">{{ a.opportunity.title }}</a><span class="status st-{{ a.status|slugify }}">{{ a.status }}</span></div>
+      {% empty %}<div class="meta">You haven't applied yet.</div>{% endfor %}
+      <a class="d-block mt-3" href="{% url 'applications:mine' %}">All applications</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

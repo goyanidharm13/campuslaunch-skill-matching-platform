@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Organization{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-6"><div class="panel">
+  <h1 class="h4 mb-3">Your organization</h1>
+  <form method="post" novalidate>{% csrf_token %}
+    {% for f in form %}<div class="mb-3"><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}{% for e in f.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}</div>{% endfor %}
+    <button class="btn btn-launch">Save organization</button>
+  </form>
+</div></div></div>
+{% endblock %}
+{% block scripts %}<script>document.querySelectorAll("main input, main textarea").forEach(function(e){e.classList.add("form-control")})</script>{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Platform statistics{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3"><h1 class="h3 mb-0">Platform statistics</h1><a class="btn btn-launch" href="{% url 'admin:index' %}">Manage users, skills, organizations and content</a></div>
+<div class="row g-3 mb-4">
+  <div class="col-4"><div class="stat"><b>{{ total_users }}</b><span>Users</span></div></div>
+  <div class="col-4"><div class="stat"><b>{{ total_opps }}</b><span>Opportunities</span></div></div>
+  <div class="col-4"><div class="stat"><b>{{ total_apps }}</b><span>Applications</span></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-md-4"><div class="panel"><h2 class="h6">Users by role</h2><table class="table mb-0">{% for r in users_by_role %}<tr><td class="text-capitalize">{{ r.role }}</td><td class="text-end">{{ r.n }}</td></tr>{% endfor %}</table></div></div>
+  <div class="col-md-4"><div class="panel"><h2 class="h6">Opportunities by type</h2><table class="table mb-0">{% for r in opps_by_type %}<tr><td class="text-capitalize">{{ r.opportunity_type }}</td><td class="text-end">{{ r.n }}</td></tr>{% endfor %}</table></div></div>
+  <div class="col-md-4"><div class="panel"><h2 class="h6">Applications by status</h2><table class="table mb-0">{% for r in apps_by_status %}<tr><td>{{ r.status }}</td><td class="text-end">{{ r.n }}</td></tr>{% endfor %}</table></div></div>
+</div>
+{% endblock %}

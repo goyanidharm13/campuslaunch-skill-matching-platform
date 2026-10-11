@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Recommended{% endblock %}
+{% block content %}
+<h1 class="h3">Recommended for you</h1>
+<p class="meta">Ranked by skill match, career goal, location, fewer missing skills and closing soon.</p>
+<div class="row g-3">
+  {% for r in recs %}<div class="col-md-6 col-lg-4">{% include "opportunities/_card.html" with opp=r.opportunity match=r.match %}</div>
+  {% empty %}<div class="panel empty">No recommendations yet. <a href="{% url 'skills:manage' %}">Add your skills</a> to get started.</div>{% endfor %}
+</div>
+{% endblock %}

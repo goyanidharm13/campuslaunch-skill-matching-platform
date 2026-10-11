@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Recruiter dashboard{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+  <h1 class="h3 mb-0">{{ org.name }}</h1>
+  <a class="btn btn-launch" href="{% url 'recruiter:opportunity_new' %}">Post opportunity</a>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md"><div class="stat"><b>{{ stats.total }}</b><span>Total opportunities</span></div></div>
+  <div class="col-6 col-md"><div class="stat"><b>{{ stats.active }}</b><span>Active</span></div></div>
+  <div class="col-6 col-md"><div class="stat"><b>{{ stats.applicants }}</b><span>Applicants</span></div></div>
+  <div class="col-6 col-md"><div class="stat"><b>{{ stats.shortlisted }}</b><span>Shortlisted</span></div></div>
+  <div class="col-6 col-md"><div class="stat"><b>{{ stats.selected }}</b><span>Selected</span></div></div>
+</div>
+<div class="row g-4">
+  <div class="col-lg-8"><div class="panel">
+    <h2 class="h5">Opportunity performance</h2>
+    <div class="table-responsive"><table class="table align-middle mb-0">
+      <thead><tr><th>Opportunity</th><th>Status</th><th class="text-end">Applicants</th><th class="text-end">Shortlisted</th><th class="text-end">Selected</th><th></th></tr></thead>
+      {% for o in performance %}<tr>
+        <td><a href="{% url 'recruiter:applicants' o.pk %}">{{ o.title }}</a><div class="meta">{{ o.get_opportunity_type_display }}{% if o.deadline %} - closes {{ o.deadline|date:"j M" }}{% endif %}</div></td>
+        <td>{% if o.is_active %}<span class="status st-selected">Active</span>{% else %}<span class="status">Closed</span>{% endif %}</td>
+        <td class="text-end">{{ o.applicants }}</td><td class="text-end">{{ o.shortlisted }}</td><td class="text-end">{{ o.selected }}</td>
+        <td class="text-end text-nowrap"><a class="btn btn-sm btn-outline-secondary" href="{% url 'recruiter:opportunity_edit' o.pk %}">Edit</a>
+          <form class="d-inline" method="post" action="{% url 'recruiter:opportunity_toggle' o.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">{% if o.is_active %}Close{% else %}Reopen{% endif %}</button></form></td>
+      </tr>{% empty %}<tr><td colspan="6" class="empty">No opportunities yet. Post your first one.</td></tr>{% endfor %}
+    </table></div>
+  </div></div>
+  <div class="col-lg-4"><div class="panel">
+    <h2 class="h5">Recent applications</h2>
+    {% for a in recent %}<div class="py-2 {% if not forloop.last %}border-bottom{% endif %}"><a href="{% url 'recruiter:student_detail' a.pk %}">{{ a.student }}</a> for {{ a.opportunity.title }}<div><span class="status st-{{ a.status|slugify }}">{{ a.status }}</span></div></div>
+    {% empty %}<div class="meta">No applications yet.</div>{% endfor %}
+  </div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}Post{% endif %} opportunity{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">{% if editing %}Edit {{ editing.title }}{% else %}Post an opportunity{% endif %}</h1>
+<form method="post" novalidate>{% csrf_token %}
+  <div class="panel mb-3"><div class="row g-3">
+    {% for f in form %}
+      <div class="{% if f.name in 'title description' %}col-12{% else %}col-md-6{% endif %}">
+        {% if f.field.widget.input_type == 'checkbox' %}<div class="form-check mt-4">{{ f }} <label class="form-check-label" for="{{ f.id_for_label }}">{{ f.label }}</label></div>
+        {% else %}<label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}{% endif %}
+        {% for e in f.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+    {% endfor %}
+  </div></div>
+
+  <div class="panel mb-3">
+    <h2 class="h5">Required skills and weights</h2>
+    <p class="meta">Weight 1 (nice to have) to 5 (essential). Match scores are calculated from these weights.</p>
+    {{ formset.management_form }}
+    {% for e in formset.non_form_errors %}<div class="alert alert-danger">{{ e }}</div>{% endfor %}
+    <table class="table align-middle"><thead><tr><th>Skill</th><th style="width:7rem">Weight</th><th style="width:5rem">Remove</th></tr></thead>
+      <tbody id="skill-rows">
+        {% for sf in formset %}<tr>
+          <td>{% for h in sf.hidden_fields %}{{ h }}{% endfor %}{{ sf.skill }}{% for e in sf.skill.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}{% for e in sf.non_field_errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}</td>
+          <td>{{ sf.weight }}{% for e in sf.weight.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}</td>
+          <td>{% if sf.instance.pk %}{{ sf.DELETE }}{% endif %}</td></tr>{% endfor %}
+      </tbody></table>
+    <button type="button" id="add-skill-row" class="btn btn-sm btn-outline-secondary">Add another skill</button>
+  </div>
+  <button class="btn btn-launch">{% if editing %}Save changes{% else %}Post opportunity{% endif %}</button>
+  <a class="btn btn-link" href="{% url 'recruiter:dashboard' %}">Cancel</a>
+</form>
+<template id="empty-form"><tr>
+  <td>{{ formset.empty_form.skill }}</td><td>{{ formset.empty_form.weight }}</td><td></td></tr></template>
+{% endblock %}
+{% block scripts %}<script>
+document.querySelectorAll("main input:not([type=checkbox]), main textarea").forEach(function(e){e.classList.add("form-control")});
+document.querySelectorAll("main select").forEach(function(e){e.classList.add("form-select")});
+</script>{% endblock %}

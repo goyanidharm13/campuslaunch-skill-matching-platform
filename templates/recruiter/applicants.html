@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Applicants{% endblock %}
+{% block content %}
+<a href="{% url 'recruiter:dashboard' %}">Back to dashboard</a>
+<h1 class="h3 mt-2">{{ opp.title }}: ranked applicants</h1>
+<p class="meta">Ranked by match %, skill coverage, projects and education, then application date.</p>
+<div class="panel">
+  <div class="table-responsive"><table class="table align-middle mb-0">
+    <thead><tr><th>Rank</th><th>Student</th><th style="min-width:11rem">Match</th><th>Missing</th><th>Applied</th><th>Status</th></tr></thead>
+    {% for a in rows %}<tr>
+      <td class="fw-bold">{{ a.rank }}</td>
+      <td><a href="{% url 'recruiter:student_detail' a.pk %}">{{ a.student }}</a><div class="meta">{{ a.student.location }}</div></td>
+      <td><div class="match"><div class="match-bar {% if a.result.percent < 50 %}low{% elif a.result.percent < 75 %}mid{% endif %}"><i style="width:{{ a.result.percent }}%"></i></div><span class="match-num">{{ a.result.percent }}%</span></div></td>
+      <td>{% for r in a.result.missing %}<span class="skill-pill miss">{{ r.skill.name }}</span>{% empty %}<span class="meta">None</span>{% endfor %}</td>
+      <td class="meta">{{ a.applied_at|date:"j M" }}</td>
+      <td><form method="post" action="{% url 'recruiter:update_status' a.pk %}" class="d-flex gap-1">{% csrf_token %}
+        <select name="status" class="form-select form-select-sm" aria-label="Status for {{ a.student }}">{% for v, l in statuses %}<option value="{{ v }}" {% if a.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+        <button class="btn btn-sm btn-launch">Update</button></form></td>
+    </tr>{% empty %}<tr><td colspan="6" class="empty">No applications yet.</td></tr>{% endfor %}
+  </table></div>
+</div>
+{% endblock %}

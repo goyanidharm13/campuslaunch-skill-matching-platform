@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Saved{% endblock %}
+{% block content %}
+<h1 class="h3 mb-3">Saved opportunities</h1>
+<div class="row g-3">
+  {% for s in items %}<div class="col-md-6 col-lg-4">{% include "opportunities/_card.html" with opp=s.opportunity match="" %}</div>
+  {% empty %}<div class="panel empty">Nothing saved yet. <a href="{% url 'opportunities:list' %}">Browse opportunities</a></div>{% endfor %}
+</div>
+{% endblock %}

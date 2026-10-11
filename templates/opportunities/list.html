@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Opportunities{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <aside class="col-lg-3">
+    <form class="panel" method="get" role="search">
+      <h1 class="h5 mb-3">Find opportunities</h1>
+      <div class="mb-3"><label class="form-label" for="q">Title or skill</label><input id="q" class="form-control" name="q" value="{{ request.GET.q }}" data-autosubmit></div>
+      <div class="mb-3"><label class="form-label" for="type">Type</label>
+        <select id="type" class="form-select" name="type"><option value="">All types</option>{% for v, l in types %}<option value="{{ v }}" {% if request.GET.type == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+      <div class="mb-3"><label class="form-label" for="location">City</label><input id="location" class="form-control" name="location" value="{{ request.GET.location }}"></div>
+      <div class="row g-2 mb-3">
+        <div class="col-6"><label class="form-label" for="da">Closes after</label><input id="da" type="date" class="form-control" name="deadline_after" value="{{ request.GET.deadline_after }}"></div>
+        <div class="col-6"><label class="form-label" for="db">Closes before</label><input id="db" type="date" class="form-control" name="deadline_before" value="{{ request.GET.deadline_before }}"></div>
+      </div>
+      <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="remote" name="remote" value="true" {% if request.GET.remote == "true" %}checked{% endif %}><label class="form-check-label" for="remote">Remote only</label></div>
+      {% if user.is_authenticated and user.role == "student" %}
+      <div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="relevant" name="relevant" value="true" {% if request.GET.relevant == "true" %}checked{% endif %}><label class="form-check-label" for="relevant">Only roles matching my skills</label></div>
+      {% endif %}
+      <button class="btn btn-launch w-100">Apply filters</button>
+      <a class="d-block text-center mt-2" href="{% url 'opportunities:list' %}">Clear</a>
+    </form>
+  </aside>
+  <section class="col-lg-9">
+    <p class="meta">{{ page.paginator.count }} result{{ page.paginator.count|pluralize }}</p>
+    <div class="row g-3">
+      {% for opp in page %}<div class="col-md-6 col-xl-4">{% include "opportunities/_card.html" with opp=opp match=opp.match %}</div>
+      {% empty %}<div class="col-12"><div class="panel empty">No opportunities match these filters. Try clearing a filter.</div></div>{% endfor %}
+    </div>
+    {% if page.has_other_pages %}
+    <nav class="mt-4" aria-label="Pagination"><ul class="pagination">
+      {% if page.has_previous %}<li class="page-item"><a class="page-link" href="?{{ querystring }}&page={{ page.previous_page_number }}">Previous</a></li>{% endif %}
+      <li class="page-item disabled"><span class="page-link">Page {{ page.number }} of {{ page.paginator.num_pages }}</span></li>
+      {% if page.has_next %}<li class="page-item"><a class="page-link" href="?{{ querystring }}&page={{ page.next_page_number }}">Next</a></li>{% endif %}
+    </ul></nav>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

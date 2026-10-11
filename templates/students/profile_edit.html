@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Edit profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-8"><div class="panel">
+  <h1 class="h4 mb-3">Edit profile</h1>
+  <form method="post" enctype="multipart/form-data" novalidate class="row g-3">{% csrf_token %}
+    {% for f in form %}
+      <div class="{% if f.name in 'bio career_goal' %}col-12{% else %}col-md-6{% endif %}">
+        <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+        {% for e in f.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+    {% endfor %}
+    <div class="col-12"><button class="btn btn-launch">Save profile</button> <a class="btn btn-link" href="{% url 'students:profile' %}">Cancel</a></div>
+  </form>
+</div></div></div>
+{% endblock %}
+{% block scripts %}<script>document.querySelectorAll("main input:not([type=file]):not([type=checkbox]), main textarea").forEach(function(e){e.classList.add("form-control")})</script>{% endblock %}
